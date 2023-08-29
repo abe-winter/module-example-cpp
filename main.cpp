@@ -76,7 +76,7 @@ class MyModule : public GenericService::Service, public Component {
 
 int MyModule::which_ = 0;
 
-int main(int argc, char** argv) {
+int main_inner(int argc, char** argv) {
     if (argc < 2) {
         throw "need socket path as command line argument";
     }
@@ -139,3 +139,13 @@ int main(int argc, char** argv) {
 
     return 0;
 };
+
+int main(int argc, char** argv) {
+    try {
+        return main_inner(argc, argv);
+    } catch (char const* msg) {
+        // todo: better error wrapping
+        printf("threw char const* %s\n", msg);
+        return 1;
+    }
+}
