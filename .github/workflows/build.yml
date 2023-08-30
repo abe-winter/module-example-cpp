@@ -14,7 +14,7 @@ jobs:
     - name: latest cmake
       run: |
         cd ~
-        wget https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh
+        wget --quiet https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh
         chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh
         cd /usr
         sudo ~/cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license
