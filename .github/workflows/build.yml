@@ -7,7 +7,7 @@ env:
 jobs:
   # test the build
   build:
-    runs-on: buildjet-8vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     steps:
     - name: deps
       run: sudo apt-get update && sudo apt-get install -qqy build-essential libabsl-dev libboost-all-dev libgrpc++-dev libprotobuf-dev libxtensor-dev pkg-config ninja-build protobuf-compiler-grpc git wget
