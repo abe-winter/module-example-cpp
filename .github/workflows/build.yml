@@ -25,6 +25,7 @@ jobs:
         mkdir build && cd build && cmake .. -G Ninja
         ninja module-example-cpp
     - name: inspect output
+      working-directory: build
       run: |
         file module-example-cpp
         ldd module-example-cpp
