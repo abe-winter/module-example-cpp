@@ -24,8 +24,14 @@ jobs:
         cmake --version
         mkdir build && cd build && cmake .. -G Ninja
         ninja module-example-cpp
+        cd ..
+    - name: bundle
+      run: make module.tar.gz
     - name: inspect output
       working-directory: build
       run: |
         file module-example-cpp
+        du -hc module-example-cpp
         ldd module-example-cpp
+        du -hc module.tar.gz
+        tar tf module.tar.gz
