@@ -24,10 +24,11 @@ jobs:
     - name: latest cmake
       run: |
         cd ~
-        wget --quiet https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh
-        chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh
+        ARCH=$(uname -m)
+        wget --quiet https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-$ARCH.sh
+        chmod +x cmake-${CMAKE_VERSION}-linux-$ARCH.sh
         cd /usr
-        ~/cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license
+        ~/cmake-${CMAKE_VERSION}-linux-$ARCH.sh --skip-license
     - uses: actions/checkout@v3
     - name: build
       run: |
