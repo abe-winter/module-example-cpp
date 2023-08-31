@@ -1,7 +1,5 @@
 #include <iostream>
 #include <memory>
-#include <pthread.h>
-#include <signal.h>
 
 #include <boost/log/trivial.hpp>
 #include <grpcpp/grpcpp.h>
@@ -20,6 +18,8 @@
 #include <viam/sdk/resource/resource.hpp>
 #include <viam/sdk/rpc/dial.hpp>
 #include <viam/sdk/rpc/server.hpp>
+
+#include "signalmgr.hpp"
 
 using viam::component::generic::v1::GenericService;
 using namespace viam::sdk;
@@ -84,17 +84,8 @@ int main_inner(int argc, char** argv) {
     // Use set_logger_severity_from_args to set the boost trivial logger's
     // severity depending on commandline arguments.
     set_logger_severity_from_args(argc, argv);
-    BOOST_LOG_TRIVIAL(debug) << "Starting module with debug level logging";
 
-    // C++ modules must handle SIGINT and SIGTERM. Make sure to create a sigset
-    // for SIGINT and SIGTERM that can be later awaited in a thread that cleanly
-    // shuts down your module. pthread_sigmask should be called near the start
-    // of main so that later threads inherit the mask.
-    sigset_t sigset;
-    sigemptyset(&sigset);
-    sigaddset(&sigset, SIGINT);
-    sigaddset(&sigset, SIGTERM);
-    pthread_sigmask(SIG_BLOCK, &sigset, NULL);
+    SignalManager signals;
 
     API generic = Generic::static_api();
     Model m("acme", "demo", "printer");
@@ -113,7 +104,6 @@ int main_inner(int argc, char** argv) {
                 throw std::runtime_error(
                     "'invalidattribute' attribute not allowed for model 'acme:demo:printer'");
             }
-
             return {"component1"};
         });
 
@@ -126,11 +116,12 @@ int main_inner(int argc, char** argv) {
 
     my_mod->add_model_from_registry(server, generic, m);
     my_mod->start(server);
+    BOOST_LOG_TRIVIAL(info) << "Module started " << m.to_string();
 
-    std::thread server_thread([&server, &sigset]() {
+    std::thread server_thread([&server, &signals]() {
         server->start();
         int sig = 0;
-        auto result = sigwait(&sigset, &sig);
+        auto result = signals.wait(&sig);
         server->shutdown();
     });
 
