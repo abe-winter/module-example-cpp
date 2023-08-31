@@ -1,5 +1,7 @@
 on:
   push:
+  release:
+    types: [created]
 
 env:
   CMAKE_VERSION: 3.27.4
@@ -7,7 +9,7 @@ env:
 jobs:
   # test the build
   build:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-8vcpu-ubuntu-2204
     container: rust:1.72-bullseye
     steps:
     - name: deps
@@ -38,3 +40,6 @@ jobs:
         make module.tar.gz
         du -hc module.tar.gz
         tar tf module.tar.gz
+    - uses: actions/upload-artifact@v3
+      with:
+        path: module.tar.gz
