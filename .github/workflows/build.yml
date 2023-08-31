@@ -19,8 +19,9 @@ jobs:
     runs-on: ${{ matrix.runs-on }}
     container: rust:1.72-bullseye
     steps:
+    - uses: actions/checkout@v3
     - name: deps
-      run: apt-get update && apt-get install -qqy build-essential libabsl-dev libboost-all-dev libgrpc++-dev libprotobuf-dev pkg-config ninja-build protobuf-compiler-grpc git wget
+      run: apt-get update && ./apt-setup.sh
     - name: latest cmake
       run: |
         cd ~
@@ -29,7 +30,6 @@ jobs:
         chmod +x cmake-${CMAKE_VERSION}-linux-$ARCH.sh
         cd /usr
         ~/cmake-${CMAKE_VERSION}-linux-$ARCH.sh --skip-license
-    - uses: actions/checkout@v3
     - name: build
       run: |
         cmake --version
@@ -50,5 +50,5 @@ jobs:
         tar tf module.tar.gz
     - uses: actions/upload-artifact@v3
       with:
-        name: bundle-${{ matrix.arch }}
+        name: bundle-${{ matrix.arch }}-${{ github.sha }}
         path: module.tar.gz
