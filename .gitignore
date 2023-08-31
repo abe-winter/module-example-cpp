@@ -1,2 +1,2 @@
 build/
-module.tar.gz
+*.tar.gz
