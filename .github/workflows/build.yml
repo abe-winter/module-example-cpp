@@ -8,30 +8,33 @@ jobs:
   # test the build
   build:
     runs-on: ubuntu-latest
+    container: rust:1.72-bullseye
     steps:
     - name: deps
-      run: sudo apt-get update && sudo apt-get install -qqy build-essential libabsl-dev libboost-all-dev libgrpc++-dev libprotobuf-dev libxtensor-dev pkg-config ninja-build protobuf-compiler-grpc git wget
+      run: apt-get update && apt-get install -qqy build-essential libabsl-dev libboost-all-dev libgrpc++-dev libprotobuf-dev pkg-config ninja-build protobuf-compiler-grpc git wget
     - name: latest cmake
       run: |
         cd ~
         wget --quiet https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh
         chmod +x cmake-${CMAKE_VERSION}-linux-x86_64.sh
         cd /usr
-        sudo ~/cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license
+        ~/cmake-${CMAKE_VERSION}-linux-x86_64.sh --skip-license
     - uses: actions/checkout@v3
-    - name: cmake
+    - name: build
       run: |
         cmake --version
-        mkdir build && cd build && cmake .. -G Ninja
+        mkdir build && cd build
+        cmake .. -G Ninja
         ninja module-example-cpp
         cd ..
-    - name: bundle
-      run: make module.tar.gz
     - name: inspect output
       working-directory: build
       run: |
         file module-example-cpp
         du -hc module-example-cpp
         ldd module-example-cpp
+    - name: bundle
+      run: |
+        make module.tar.gz
         du -hc module.tar.gz
         tar tf module.tar.gz
