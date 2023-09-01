@@ -20,35 +20,20 @@
 #include <viam/sdk/rpc/server.hpp>
 
 #include "signalmgr.hpp"
+#include "wifi.hpp"
 
 using viam::component::generic::v1::GenericService;
 using namespace viam::sdk;
 
 class MyModule : public GenericService::Service, public Component {
    public:
-    void reconfigure(Dependencies deps, ResourceConfig cfg) override {
-        std::cout << "Calling reconfigure on MyModule" << std::endl;
-        for (auto& dep : deps) {
-            std::cout << "dependency: " << dep.first.to_string() << std::endl;
-        }
-
-        std::cout << "config in reconfigure: " << cfg.name() << std::endl;
-    }
-
     API dynamic_api() const override {
         return Generic::static_api();
     }
 
-    MyModule() {
-        inner_which_ = which_;
-        which_ += 1;
-    };
-
     MyModule(ResourceConfig cfg) {
         name_ = cfg.name();
-        std::cout << "Creating module with name " + name_ << std::endl;
-        inner_which_ = which_;
-        which_ += 1;
+        std::cout << "Instantiating module with name " + name_ << std::endl;
     }
 
     MyModule(const MyModule&) = delete;
@@ -57,24 +42,15 @@ class MyModule : public GenericService::Service, public Component {
     ::grpc::Status DoCommand(::grpc::ServerContext* context,
                              const ::viam::common::v1::DoCommandRequest* request,
                              ::viam::common::v1::DoCommandResponse* response) override {
-        std::cout << "Received DoCommand request for MyModule number " << inner_which_
-                  << " and name " << name_ << std::endl;
-        for (const auto& req : request->command().fields()) {
-            std::cout << "request key: " << req.first.c_str()
-                      << "\trequest value: " << req.second.SerializeAsString();
+        if (auto errorMsg = read_wireless(response->mutable_result())) {} else {
+            return grpc::Status(grpc::UNAVAILABLE, errorMsg);
         }
-        *response->mutable_result() = request->command();
-
         return grpc::Status();
     }
 
    private:
     std::string name_;
-    static int which_;
-    int inner_which_;
 };
-
-int MyModule::which_ = 0;
 
 int main_inner(int argc, char** argv) {
     if (argc < 2) {
