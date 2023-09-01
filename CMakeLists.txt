@@ -18,5 +18,4 @@ FetchContent_MakeAvailable(viam-cpp-sdk)
 
 FILE(GLOB sources src/*.cpp)
 add_executable(module-example-cpp ${sources})
-add_dependencies(module-example-cpp viam-cpp-sdk::viamsdk)
 target_link_libraries(module-example-cpp PRIVATE viam-cpp-sdk::viamsdk)

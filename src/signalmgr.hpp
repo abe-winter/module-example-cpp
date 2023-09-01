@@ -9,6 +9,7 @@
 class SignalManager {
     public:
     SignalManager();
+    /** wait on sigset */
     int wait(int* sig);
     sigset_t sigset;
 };

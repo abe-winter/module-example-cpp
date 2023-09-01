@@ -1,7 +1,6 @@
 #include <iostream>
 #include <memory>
 
-#include <boost/log/trivial.hpp>
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/server_context.h>
 
@@ -42,9 +41,13 @@ class MyModule : public GenericService::Service, public Component {
     ::grpc::Status DoCommand(::grpc::ServerContext* context,
                              const ::viam::common::v1::DoCommandRequest* request,
                              ::viam::common::v1::DoCommandResponse* response) override {
+        std::cout << "docommand top" << std::endl;
+        return grpc::Status();
         if (auto errorMsg = read_wireless(response->mutable_result())) {} else {
+            std::cout << "docommand err" << std::endl;
             return grpc::Status(grpc::UNAVAILABLE, errorMsg);
         }
+        std::cout << "docommand ok" << std::endl;
         return grpc::Status();
     }
 
@@ -52,10 +55,11 @@ class MyModule : public GenericService::Service, public Component {
     std::string name_;
 };
 
-int main_inner(int argc, char** argv) {
+int main(int argc, char** argv) {
     if (argc < 2) {
-        throw "need socket path as command line argument";
+        throw std::invalid_argument("Pass socket path as first argument");
     }
+    std::string socket_addr = argv[1];
 
     // Use set_logger_severity_from_args to set the boost trivial logger's
     // severity depending on commandline arguments.
@@ -63,46 +67,27 @@ int main_inner(int argc, char** argv) {
 
     SignalManager signals;
 
-    API generic = Generic::static_api();
-    Model m("acme", "demo", "printer");
-
     std::shared_ptr<ModelRegistration> mr = std::make_shared<ModelRegistration>(
         ResourceType("MyModule"),
-        generic,
-        m,
+        Generic::static_api(),
+        Model("acme", "demo", "printer"),
         [](Dependencies, ResourceConfig cfg) { return std::make_unique<MyModule>(cfg); }
     );
 
     Registry::register_model(mr);
 
-    // The `ModuleService_` must outlive the Server, so the declaration order
-    // here matters.
-    auto my_mod = std::make_shared<ModuleService_>(argv[1]);
+    // The `ModuleService_` must outlive the Server, so the declaration order here matters.
+    auto my_mod = std::make_shared<ModuleService_>(socket_addr);
     auto server = std::make_shared<Server>();
 
-    my_mod->add_model_from_registry(server, generic, m);
+    my_mod->add_model_from_registry(server, mr->api(), mr->model());
     my_mod->start(server);
-    BOOST_LOG_TRIVIAL(info) << "Module started " << m.to_string();
+    std::cout << "Module serving model " << mr->model().to_string() << ", listening on " << socket_addr << std::endl;
 
-    std::thread server_thread([&server, &signals]() {
-        server->start();
-        int sig = 0;
-        auto result = signals.wait(&sig);
-        server->shutdown();
-    });
-
-    server->wait();
-    server_thread.join();
+    server->start();
+    int sig = 0;
+    auto result = signals.wait(&sig);
+    server->shutdown();
 
     return 0;
 };
-
-int main(int argc, char** argv) {
-    try {
-        return main_inner(argc, argv);
-    } catch (char const* msg) {
-        // todo: better error wrapping
-        printf("threw char const* %s\n", msg);
-        return 1;
-    }
-}
