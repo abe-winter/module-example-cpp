@@ -52,10 +52,12 @@ In general, `ldd` is your friend. Run `ldd module-example-cpp` in the unpacked t
 
 If you are getting unexplained phenomena, especially crashes or disconnects, gdb is your friend!
 
+These steps are easier if you use your development machine as the 'robot', i.e. install viam-server on your laptop.
+
 To connect gdb:
 
 1. Configure your robot to use the module + make sure it's running
-2. Find the pid of your running module with `ps aux | grep module-example-cpp` (replace the executable name if you've changed it)
-3. `sudo gdb --pid $PID` with the pid you found (sudo because the robot is probably running in sudo)
-4. `continue` in gdb to restart the process
-5. Do the thing that is causing your module to crash. Gdb should catch it
+1. Find the pid of your running module with `ps aux | grep module-example-cpp` (replace the executable name if you've changed it)
+1. `sudo gdb --pid $PID` with the pid you found (sudo because the robot is probably running in sudo)
+1. `continue` in gdb to restart the process
+1. Do the thing that is causing your module to crash. Gdb should catch it

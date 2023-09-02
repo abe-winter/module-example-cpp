@@ -1,0 +1,13 @@
+{
+  "module_id": "viam:module-example-cpp",
+  "visibility": "public",
+  "url": "https://github.com/viamrobotics/module-example-cpp",
+  "description": "Wifi stats example module using the Viam C++ SDK",
+  "models": [
+    {
+      "api": "rdk:component:generic",
+      "model": "viam:wifi:cpp"
+    }
+  ],
+  "entrypoint": "run.sh"
+}

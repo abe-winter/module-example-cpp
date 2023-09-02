@@ -5,6 +5,7 @@ on:
 
 env:
   CMAKE_VERSION: 3.27.4
+  VERSION: ${{ github.event_name == 'release' && github.ref_name || format('0.0.0-{0}.{1}', github.ref_name, github.run_number) }}
 
 jobs:
   # test the build
@@ -52,3 +53,11 @@ jobs:
       with:
         name: bundle-${{ matrix.arch }}-${{ github.sha }}
         path: module.tar.gz
+    - uses: viamrobotics/upload-module@main
+      # if: github.event_name == 'release'
+      with:
+        module-path: module.tar.gz
+        platform: linux/${{ matrix.arch }}
+        version: ${{ env.VERSION }}
+        key-id: ${{ secrets.viam_key_id }}
+        key-value: ${{ secrets.viam_key_value }}

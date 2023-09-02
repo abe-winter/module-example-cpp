@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     SignalManager signals;
 
     std::shared_ptr<ModelRegistration> mr = std::make_shared<ModelRegistration>(
-        ResourceType("MyModule"), Generic::static_api(), Model("acme", "demo", "printer"),
+        ResourceType("MyModule"), Generic::static_api(), Model("viam", "wifi", "cpp"),
         [](Dependencies deps, ResourceConfig cfg) { return std::make_shared<MyModule>(deps, cfg); }
     );
 
