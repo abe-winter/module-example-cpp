@@ -47,3 +47,15 @@ In general, `ldd` is your friend. Run `ldd module-example-cpp` in the unpacked t
 	- Need `LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD`
 - Can't find something else
 	- You probably need to `apt-get install` it. Check .github/workflows/build.yml for package names (without the `-dev` suffix)
+
+### Connecting a debugger
+
+If you are getting unexplained phenomena, especially crashes or disconnects, gdb is your friend!
+
+To connect gdb:
+
+1. Configure your robot to use the module + make sure it's running
+2. Find the pid of your running module with `ps aux | grep module-example-cpp` (replace the executable name if you've changed it)
+3. `sudo gdb --pid $PID` with the pid you found (sudo because the robot is probably running in sudo)
+4. `continue` in gdb to restart the process
+5. Do the thing that is causing your module to crash. Gdb should catch it
