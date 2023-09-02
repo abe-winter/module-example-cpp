@@ -1,3 +1,3 @@
-#include <google/protobuf/struct.pb.h>
+#include <viam/sdk/common/proto_type.hpp>
 
-const char* read_wireless(google::protobuf::Struct* mutable_result);
+viam::sdk::AttributeMap read_wireless();

@@ -1,15 +1,18 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
+#include "wifi.hpp"
+
+#include <google/protobuf/wrappers.pb.h>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
-#include <google/protobuf/wrappers.pb.h>
-#include "wifi.hpp"
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-const char* fields[11] = {
+/** the field names in /proc/net/wireles */
+const char *fields[11] = {
     "interface",
     "status",
     // iw_quality fields
@@ -27,41 +30,47 @@ const char* fields[11] = {
 };
 const unsigned int nfields = sizeof(fields) / sizeof(fields[0]);
 
-vector<string> split(string& orig, char delim = ' ') {
+/** util: split a string by spaces */
+vector<string> split(string &orig, char delim = ' ') {
     vector<string> tokens;
     boost::algorithm::split(tokens, orig, [delim](char c) { return c == delim; });
     vector<string> non_delim;
-    copy_if(
-        tokens.begin(), tokens.end(), back_inserter(non_delim),
-        [](string& s) { return s.size() > 0; }
-    );
+    copy_if(tokens.begin(), tokens.end(), back_inserter(non_delim), [](string &s) {
+        return s.size() > 0;
+    });
     return non_delim;
 }
 
-/**
-  * Read /proc/net/wireless + parse to dictionary.
-  */
-const char* read_wireless(google::protobuf::Struct* mutable_result) {
-    ifstream source("/proc/net/wireless");
+/** util: read lines from file */;
+vector<string> readLines(const char *path) {
     vector<string> lines;
+    ifstream source(path);
     string line;
     while (getline(source, line)) {
         lines.push_back(line);
     }
+    return lines;
+}
+
+/** Read /proc/net/wireless + parse to dictionary */
+viam::sdk::AttributeMap read_wireless() {
+    auto lines = readLines("/proc/net/wireless");
     if (lines.size() != 3) {
         cerr << "unexpected line count " << lines.size() << endl;
-        return "Unexpected line count";
+        throw std::runtime_error("Unexpected line count in read_wireless");
     }
     auto tokens = split(lines[2]);
     if (tokens.size() != nfields) {
         cerr << "unexpected token count " << tokens.size() << endl;
-        return "Unexpected token count";
+        throw std::runtime_error("Unexpected token count in read_wireless");
     }
-    auto& retFields = *(mutable_result->mutable_fields());
+    auto map =
+        std::make_shared<std::unordered_map<std::string, std::shared_ptr<viam::sdk::ProtoType>>>();
     for (unsigned int i = 0; i < nfields; ++i) {
-        google::protobuf::Value val;
-        val.set_string_value(tokens[i]);
-        retFields[fields[i]] = val;
+        map->insert({
+            std::string(fields[i]),
+            std::make_shared<viam::sdk::ProtoType>(tokens[i]),
+        });
     }
-    return nullptr;
+    return map;
 }
