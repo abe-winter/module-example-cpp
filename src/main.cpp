@@ -1,37 +1,16 @@
-#include <grpcpp/grpcpp.h>
-#include <grpcpp/server_context.h>
-#include <viam/api/common/v1/common.grpc.pb.h>
-#include <viam/api/component/generic/v1/generic.grpc.pb.h>
-#include <viam/api/robot/v1/robot.pb.h>
-
-#include <iostream>
-#include <memory>
-#include <viam/sdk/components/component.hpp>
 #include <viam/sdk/components/generic/generic.hpp>
-#include <viam/sdk/config/resource.hpp>
-#include <viam/sdk/module/module.hpp>
 #include <viam/sdk/module/service.hpp>
-#include <viam/sdk/registry/registry.hpp>
-#include <viam/sdk/resource/resource.hpp>
-#include <viam/sdk/rpc/dial.hpp>
-#include <viam/sdk/rpc/server.hpp>
 
 #include "signalmgr.hpp"
 #include "wifi.hpp"
 
-using viam::component::generic::v1::GenericService;
 using namespace viam::sdk;
 
 class MyModule : public Generic {
    public:
     MyModule(Dependencies deps, ResourceConfig cfg) : Generic(cfg.name()) {}
-
     AttributeMap do_command(AttributeMap command) { return read_wireless(); }
-
     std::vector<GeometryConfig> get_geometries() { return std::vector<GeometryConfig>(); }
-
-   private:
-    std::string name_;
 };
 
 int main(int argc, char **argv) {
@@ -61,9 +40,8 @@ int main(int argc, char **argv) {
               << socket_addr << std::endl;
 
     server->start();
-    // todo: can I register error handler for server?
     int sig = 0;
     auto result = signals.wait(&sig);
     server->shutdown();
     return 0;
-};
+}
