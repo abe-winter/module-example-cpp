@@ -52,7 +52,7 @@ jobs:
       with:
         name: bundle-${{ matrix.arch }}-${{ github.sha }}
         path: module.tar.gz
-    - uses: viamrobotics/upload-module@main
+    - uses: viamrobotics/upload-module@v1
       if: github.event_name == 'release'
       with:
         module-path: module.tar.gz
