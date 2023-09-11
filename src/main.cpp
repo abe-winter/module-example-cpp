@@ -1,7 +1,6 @@
 #include <viam/sdk/components/generic/generic.hpp>
 #include <viam/sdk/module/service.hpp>
 
-#include "signalmgr.hpp"
 #include "wifi.hpp"
 
 using namespace viam::sdk;
