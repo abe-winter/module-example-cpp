@@ -8,7 +8,7 @@ include(FetchContent)
 FetchContent_Declare(
   viam-cpp-sdk
   GIT_REPOSITORY https://github.com/viamrobotics/viam-cpp-sdk.git
-  GIT_TAG consume-static-rust
+  GIT_TAG main
   # SOURCE_DIR ${CMAKE_SOURCE_DIR}/../viam-cpp-sdk
   CMAKE_ARGS -DVIAMCPPSDK_USE_DYNAMIC_PROTOS=ON
   FIND_PACKAGE_ARGS
