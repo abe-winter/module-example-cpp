@@ -10,7 +10,7 @@ This is our example module for C++. It shows you how to:
 
 Known good environments:
 - Debian Bullseye (this is what our CI uses)
-- Ubuntu 22.04
+- You can use Ubuntu 22.04 for testing, but the C++ builds will not be binary compatible with Bullseye
 
 Setup and build instructions:
 - Install the apt packages in [apt-setup.sh](apt-setup.sh)
@@ -54,6 +54,17 @@ Go to 'Config' tab, then change the 'Mode:' selector from 'Builder' to 'Raw JSON
 
 If you make your own build and upload it, you'll need to change `components.0.model` and `modules.0.module_id` to your values. If you don't upload your build to our registry, you can also `scp` it to your robot and run with [executable_path / local exec mode](https://docs.viam.com/extend/modular-resources/configure/#configure-your-module).
 
+## Contents
+
+Guided tour of this repo:
+
+- src/: source code for the module
+- CMakeLists.txt: configuration for compiling the binary and getting dependencies
+- Makefile: command to make the module tarball
+- .github/workflows: CI build + deployment logic
+- run.sh, apt-setup.sh: entrypoint and dependency installation for running this on a robot
+- meta.json: Viam module config
+
 ## Setting up CI
 
 This repo uses Buildjet runners so we can build natively for ARM. (Look at the `uses` line in [build.yml](.github/workflows/build.yml)). If you fork this repo and you don't have Buildjet connected to Github, your CI jobs won't start.
@@ -62,6 +73,8 @@ Your options are:
 - Target x86 only. Switch to a github runner (`uses: ubuntu-latest`) and remove arm64 from `strategy: matrix` in build.yml
 - Build on an arm emulator using QEMU with the docker/build-push-action, per [instructions here](https://github.com/docker/build-push-action#git-context). This will be slow (~5x slower than native)
 - Set up cross compilation (but this will be a project)
+
+For more instructions about how to deploy your fork, see the [fork instructions](https://github.com/viam-labs/python-example-module#forking-this-repo) in the Python example module.
 
 ## Troubleshooting
 
