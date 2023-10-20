@@ -21,7 +21,7 @@ jobs:
     - name: deps
       run: |
         apt-get update
-        apt-get install -qy build-essential pkg-config ninja-build git wget libboost-log-dev
+        apt-get install -qy build-essential pkg-config ninja-build git wget libboost-log-dev file
     - name: latest cmake
       run: |
         ARCH=$(uname -m)
