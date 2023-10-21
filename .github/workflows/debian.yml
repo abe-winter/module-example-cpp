@@ -1,7 +1,5 @@
 on:
   push:
-  release:
-    types: [published]
 
 env:
   CMAKE_VERSION: 3.27.4
@@ -17,44 +15,34 @@ jobs:
         - runs-on: buildjet-4vcpu-ubuntu-2204-arm
           arch: arm64
     runs-on: ${{ matrix.runs-on }}
-    container: debian:bullseye
+    container: debian:bookworm
     steps:
     - uses: actions/checkout@v3
     - name: deps
-      run: apt-get update && ./apt-setup.sh
+      run: |
+        apt-get update
+        apt-get install -qy build-essential pkg-config ninja-build git wget libboost-log-dev file
     - name: latest cmake
       run: |
         ARCH=$(uname -m)
         wget --quiet https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-$ARCH.sh
         chmod +x cmake-${CMAKE_VERSION}-linux-$ARCH.sh
         ./cmake-${CMAKE_VERSION}-linux-$ARCH.sh --skip-license --prefix=/usr
-    - name: build
+    - name: install viam sdk
       run: |
-        cmake --version
-        mkdir build && cd build
-        cmake -DFETCH_GIT=ON .. -G Ninja
-        ninja module-example-cpp
-        cd ..
-    - name: inspect output
+        wget https://storage.googleapis.com/packages.viam.com/debian/cpp-sdk/viam-cpp-sdk-0.0.0-bookworm-`uname -m`.deb
+        apt-get install -qy ./viam-cpp-sdk-0.0.0-bookworm-`uname -m`.deb
+    - name: mkdir
+      run: mkdir build
+    - name: build
       working-directory: build
       run: |
+        cmake --version
+        cmake .. -G Ninja
+        ninja module-example-cpp
         file module-example-cpp
-        du -hc module-example-cpp
         ldd module-example-cpp
-    - name: bundle
-      run: |
-        make module.tar.gz
-        du -hc module.tar.gz
-        tar tf module.tar.gz
     - uses: actions/upload-artifact@v3
       with:
-        name: bundle-${{ matrix.arch }}-${{ github.sha }}
-        path: module.tar.gz
-    - uses: viamrobotics/upload-module@v1
-      if: github.event_name == 'release'
-      with:
-        module-path: module.tar.gz
-        platform: linux/${{ matrix.arch }}
-        version: ${{ env.VERSION }}
-        key-id: ${{ secrets.viam_key_id }}
-        key-value: ${{ secrets.viam_key_value }}
+        name: binary-${{ matrix.arch }}
+        path: build/module-example-cpp
