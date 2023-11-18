@@ -1,15 +1,16 @@
-#include <viam/sdk/components/generic/generic.hpp>
+#include <viam/sdk/components/sensor/sensor.hpp>
 #include <viam/sdk/module/service.hpp>
 
 #include "wifi.hpp"
 
 using namespace viam::sdk;
 
-class MyModule : public Generic {
+class WifiSensor : public Sensor {
    public:
-    MyModule(Dependencies deps, ResourceConfig cfg) : Generic(cfg.name()) {}
-    AttributeMap do_command(AttributeMap command) { return read_wireless(); }
-    std::vector<GeometryConfig> get_geometries() { return std::vector<GeometryConfig>(); }
+    WifiSensor(Dependencies deps, ResourceConfig cfg) : Sensor(cfg.name()) {}
+    AttributeMap do_command(const AttributeMap& command) { return {}; }
+    std::vector<GeometryConfig> get_geometries(const AttributeMap& extra) { return std::vector<GeometryConfig>(); }
+    AttributeMap get_readings(const AttributeMap& extra) { return read_wireless(); }
 };
 
 int main(int argc, char **argv) {
@@ -23,8 +24,8 @@ int main(int argc, char **argv) {
     SignalManager signals;
 
     std::shared_ptr<ModelRegistration> mr = std::make_shared<ModelRegistration>(
-        ResourceType("MyModule"), Generic::static_api(), Model("viam", "wifi", "cpp"),
-        [](Dependencies deps, ResourceConfig cfg) { return std::make_shared<MyModule>(deps, cfg); }
+        ResourceType("WifiSensor"), Sensor::static_api(), Model("viam", "wifi", "cpp"),
+        [](Dependencies deps, ResourceConfig cfg) { return std::make_shared<WifiSensor>(deps, cfg); }
     );
 
     Registry::register_model(mr);
