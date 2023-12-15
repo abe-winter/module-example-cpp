@@ -8,8 +8,7 @@ include(FetchContent)
 FetchContent_Declare(
   viam-cpp-sdk
   GIT_REPOSITORY https://github.com/viamrobotics/viam-cpp-sdk.git
-  # temporary pin -- use release when possible
-  GIT_TAG 46ba29fe17a6887fd13deb4ef089a155e9730c55
+  GIT_TAG 2e5fd316ce43410fb59778220fb53128d613892a
   # SOURCE_DIR ${CMAKE_SOURCE_DIR}/../viam-cpp-sdk
   CMAKE_ARGS -DVIAMCPPSDK_USE_DYNAMIC_PROTOS=ON
   FIND_PACKAGE_ARGS
