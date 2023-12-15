@@ -5,7 +5,7 @@
   "description": "Wifi stats example module using the Viam C++ SDK",
   "models": [
     {
-      "api": "rdk:component:generic",
+      "api": "rdk:component:sensor",
       "model": "viam:wifi:cpp"
     }
   ],
