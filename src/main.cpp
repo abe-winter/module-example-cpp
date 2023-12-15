@@ -19,8 +19,7 @@ int main(int argc, char **argv) {
         [](Dependencies deps, ResourceConfig cfg) { return std::make_shared<WifiSensor>(deps, cfg); }
     );
 
-    // The `ModuleService` must outlive the Server, so the declaration order here matters.
-    auto service = std::make_shared<ModuleService>(argc, argv, std::vector{mr});
+    auto service = std::make_shared<ModuleService>(argc, argv, std::vector<std::shared_ptr<ModelRegistration>>{mr});
     service->serve();
     return 0;
 }
