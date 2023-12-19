@@ -1,0 +1,20 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: viamrobotics/build-action@main
+      with:
+        # note: version will be blank on 'push' event.
+        # This is intentional because this repo still has the legacy upload-module action.
+        version: ${{ inputs.version }}
+        ref: ${{ github.ref }}
+        key-id: ${{ secrets.viam_key_id }}
+        key-value: ${{ secrets.viam_key_value }}

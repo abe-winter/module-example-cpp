@@ -9,5 +9,9 @@
       "model": "viam:wifi:cpp"
     }
   ],
+  "build": {
+    "build": "make module.tar.gz",
+    "arch" : ["linux/amd64", "linux/arm64"]
+  },
   "entrypoint": "run.sh"
 }
