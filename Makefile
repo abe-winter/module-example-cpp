@@ -13,3 +13,8 @@ module.tar.gz: $(BUILD_DIR)/module-example-cpp run.sh
 
 clean:
 	rm -rf build module.tar.gz
+
+setup:
+	# setup step for cloud builds
+	./apt-setup.sh
+	apt-get install -qy cmake
