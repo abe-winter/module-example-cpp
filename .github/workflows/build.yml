@@ -31,21 +31,12 @@ jobs:
         cd /usr
         ~/cmake-${CMAKE_VERSION}-linux-$ARCH.sh --skip-license
     - name: build
-      run: |
-        cmake --version
-        mkdir build && cd build
-        cmake .. -G Ninja
-        ninja module-example-cpp
-        cd ..
+      run: make module.tar.gz
     - name: inspect output
-      working-directory: build
       run: |
-        file module-example-cpp
-        du -hc module-example-cpp
-        ldd module-example-cpp
-    - name: bundle
-      run: |
-        make module.tar.gz
+        file build/module-example-cpp
+        du -hc build/module-example-cpp
+        ldd build/module-example-cpp
         du -hc module.tar.gz
         tar tf module.tar.gz
     - uses: actions/upload-artifact@v3
