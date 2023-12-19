@@ -16,5 +16,6 @@ clean:
 
 setup:
 	# setup step for cloud builds
+	apt-get update
 	./apt-setup.sh
 	apt-get install -qy cmake
