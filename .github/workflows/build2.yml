@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: viamrobotics/build-action@main
+    - uses: viamrobotics/build-action@v1
       with:
         # note: version will be blank on 'push' event.
         # This is intentional because this repo still has the legacy upload-module action.
