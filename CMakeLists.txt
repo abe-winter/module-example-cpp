@@ -11,6 +11,7 @@ FetchContent_Declare(
   GIT_TAG 2e5fd316ce43410fb59778220fb53128d613892a
   # SOURCE_DIR ${CMAKE_SOURCE_DIR}/../viam-cpp-sdk
   CMAKE_ARGS -DVIAMCPPSDK_USE_DYNAMIC_PROTOS=ON
+  EXCLUDE_FROM_ALL
   FIND_PACKAGE_ARGS
 )
 FetchContent_MakeAvailable(viam-cpp-sdk)
