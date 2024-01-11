@@ -18,16 +18,15 @@ To setup for building this module:
 
 1. Install the apt packages in [apt-setup.sh](apt-setup.sh).
 2. Install the latest version of CMake to ensure compatibility with this module's CI.
-	- Install CMake on **Ubuntu 22.04**, by running the following command:
-
-	     ```sh
-	     snap install cmake
-	     ```
+<br/><br/>To install CMake on **Ubuntu 22.04**, run the following command:<br/><br/>
+	```sh
+	snap install cmake
+	```
             
- 	     > [!NOTE]
- 	     > Avoid using `apt-get` as it may install an older version of CMake.
-    
-	- See [CMake's download instructions](https://cmake.org/download/) for more information.
+> [!WARNING]
+> Avoid using `apt-get` as it may install an older version of CMake.
+
+* See [CMake's download instructions](https://cmake.org/download/) for more information.<br/>
   	
 3. [Install rust](https://www.rust-lang.org/tools/install) (needed for `viam_rust_utils`).
 
@@ -139,5 +138,5 @@ The debugger referenced in this case is [GDB](https://www.onlinegdb.com/).
 1. Configure your robot to use the module and ensure it's running.
 2. Find the PID of your running module with `ps aux | grep module-example-cpp`.
 3. Run `sudo gdb --pid $PID` with the obtained PID (use `sudo` as `viam-server` is likely running in sudo).
-4. Type `continue` in `gdb` to restart the process.
+4. Type `continue` in gdb to restart the process.
 5. Trigger the action causing the issue, and gdb should catch it.
