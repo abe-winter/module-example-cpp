@@ -33,6 +33,10 @@ To setup for building this module:
 
 ## Build and Run
 
+### Use from the Registry
+
+To build this module and it's executable sourced from the registry, follow this set of instructions.
+Alternatively, you can [build your module and it's executable locally](#build-locally).
 These instructions assume a target system similar to Debian Bullseye.
 First, install the required libraries on your target system:
 
@@ -42,17 +46,25 @@ sudo apt install -qqy libgrpc++1 libboost-log1.74.0
 
 Then follow the C++ instructions to [add a module from the Viam Registry](https://docs.viam.com/registry/configure/#add-a-modular-resource-from-the-viam-registry) and select the `wifi:cpp` model from the `module-example-cpp` module.
 
+### Build Locally
+
+These instructions assume a target system similar to Debian Bullseye.
+
+Before you can build your module's executable, you must [create your module locally](https://docs.viam.com/registry/create/#prepare-the-module-for-execution), following the C++ instructions. 
+Once your module is created, follow the steps to [prepare the module for execution](https://docs.viam.com/registry/create/#prepare-the-module-for-execution).
+
+You can use the sections linked in the [Module Contents](#module-contents) section as a reference when creating and building your own C++ module.
 
 ## Configure your Example C++ Module
 
 > [!NOTE]
-> Before configuring your example module, you must [create a robot](https://docs.viam.com/manage/fleet/robots/#add-a-new-robot).
+> Before configuring your example module, you must [add a machine](https://docs.viam.com/fleet/machines/#add-a-new-machine).
 
-Navigate to the **Config** tab of your robot’s page in [the Viam app](https://app.viam.com/).
+Navigate to the **Config** tab of your machine’s page in [the Viam app](https://app.viam.com/).
 Click on the **Components** subtab and click **Create component**.
 Select **Sensor**, then search for the `wifi:cpp` model. Give your resource a name of your choice, click **Create** and then click **Save config**.
 
-Next, change the **Mode:** selector from **Builder** to **Raw JSON**, and verify that `"components"` array now includes the `viam:wifi:cpp` model and that `"modules"` array includes `viam:module-example-cpp` module. 
+Next, change the **Mode:** selector from **Builder** to **Raw JSON**, and verify that `"components"` array now includes the `viam:wifi:cpp` model and that `"modules"` array includes the `module-example-cpp` module. 
 
 Your `Raw JSON` configuration should now include both: 
 
@@ -80,11 +92,11 @@ Your `Raw JSON` configuration should now include both:
 ```
 
 If you upload your version to the Viam registry after building it, remember to update `model` and `module_id` with your values.
-If you aren't using the registry, you can also use `scp` to transfer the build to your robot and run it in 
+If you aren't using the registry, you can also use `scp` to transfer the build to your machine and run it in 
 [executable_path / local exec mode](https://docs.viam.com/extend/modular-resources/configure/#configure-your-module).
 
 > [!NOTE]  
-> For more information, see [Configure a Robot](https://docs.viam.com/manage/configuration/).
+> For more information, see [Configure a Machine](https://docs.viam.com/manage/configuration/).
 
 
 ## Module Contents
@@ -96,7 +108,7 @@ You can use this repository's files as a reference when building your C++ module
 | `CMakeLists.txt` | The configuration for compiling the binary and managing dependencies. | `-` |
 | `Makefile` | The command to create the module tarball dependencies. | `-` |
 | `.github/workflows/` | The CI build and deployment logic for the registry. | `-` |
-| `run.sh` and `apt-setup.sh` | The entrypoint and dependency installation for running the module on a robot. | `-` |
+| `run.sh` and `apt-setup.sh` | The entrypoint and dependency installation for running the module on a machine. | `-` |
 | `meta.json` | The Viam module configuration. | `-` |
 | `main.cpp`  | The module's entry point file.</br>See [Code a main entry point program](https://docs.viam.com/registry/create/#code-a-main-entry-point-program) for more information. | `src`|
 | `wifi.cpp` | The resource model which implements all the methods that the Viam RDK require.</br>See [Code a new resource model](https://docs.viam.com/registry/create/#code-a-new-resource-model) for more information. | `src` |
@@ -116,8 +128,9 @@ Refer to the [fork instructions](https://github.com/viam-labs/python-example-mod
 
 
 ## Troubleshooting
+
 > [!NOTE]
-> Ensure you have `viam-server` installed on the machine you are using as your robot.
+> Ensure you have `viam-server` installed on the machine you have connected to Viam.
 
 
 ### Library Paths
@@ -135,7 +148,7 @@ For example:
 For unexplained issues, you can use a debugger to investigate crashes or disconnects.
 The debugger referenced in this case is [GDB](https://www.onlinegdb.com/).
 
-1. Configure your robot to use the module and ensure it's running.
+1. Configure your machine to use the module and ensure it's running.
 2. Find the PID of your running module with `ps aux | grep module-example-cpp`.
 3. Run `sudo gdb --pid $PID` with the obtained PID (use `sudo` as `viam-server` is likely running in sudo).
 4. Type `continue` in gdb to restart the process.
