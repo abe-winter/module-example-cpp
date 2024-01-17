@@ -130,7 +130,7 @@ Refer to the [fork instructions](https://github.com/viam-labs/python-example-mod
 ## Troubleshooting
 
 > [!NOTE]
-> Ensure you have `viam-server` installed on the machine you have connected to Viam.
+> Ensure you have `viam-server` installed your machine.
 
 
 ### Library Paths
