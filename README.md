@@ -33,6 +33,7 @@ To setup for building this module:
 
 ## Build and Run
 
+You can build this exampl
 ### Use from the Registry
 
 To build this module and it's executable sourced from the registry, follow this set of instructions.
@@ -50,8 +51,9 @@ Then follow the C++ instructions to [add a module from the Viam Registry](https:
 
 These instructions assume a target system similar to Debian Bullseye.
 
-Before you can build your module's executable, you must [create your module locally](https://docs.viam.com/registry/create/#prepare-the-module-for-execution), following the C++ instructions. 
-Once your module is created, follow the steps to [prepare the module for execution](https://docs.viam.com/registry/create/#prepare-the-module-for-execution).
+Before you can build this module's executable, you must follow the steps to [prepare a module for execution](https://docs.viam.com/registry/create/#prepare-the-module-for-execution).
+
+You can also view the [complex C++ module examples](https://github.com/viamrobotics/viam-cpp-sdk/tree/main/src/viam/examples/modules/complex) to see how a simple module like this one can be modified. 
 
 You can use the sections linked in the [Module Contents](#module-contents) section as a reference when creating and building your own C++ module.
 
