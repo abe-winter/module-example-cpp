@@ -33,11 +33,11 @@ To setup for building this module:
 
 ## Build and Run
 
-You can build this exampl
-### Use from the Registry
+You can build this example module by either following [steps to build it directly from the registry](build-from-the-registry) or by opting for [local build instructions](#build-locally).
+
+### Build from the Registry
 
 To build this module and it's executable sourced from the registry, follow this set of instructions.
-Alternatively, you can [build your module and it's executable locally](#build-locally).
 These instructions assume a target system similar to Debian Bullseye.
 First, install the required libraries on your target system:
 
@@ -52,8 +52,6 @@ Then follow the C++ instructions to [add a module from the Viam Registry](https:
 These instructions assume a target system similar to Debian Bullseye.
 
 Before you can build this module's executable, you must follow the steps to [prepare a module for execution](https://docs.viam.com/registry/create/#prepare-the-module-for-execution).
-
-You can also view the [complex C++ module examples](https://github.com/viamrobotics/viam-cpp-sdk/tree/main/src/viam/examples/modules/complex) to see how a simple module like this one can be modified. 
 
 You can use the sections linked in the [Module Contents](#module-contents) section as a reference when creating and building your own C++ module.
 
@@ -155,3 +153,5 @@ The debugger referenced in this case is [GDB](https://www.onlinegdb.com/).
 3. Run `sudo gdb --pid $PID` with the obtained PID (use `sudo` as `viam-server` is likely running in sudo).
 4. Type `continue` in gdb to restart the process.
 5. Trigger the action causing the issue, and gdb should catch it.
+
+For a more involved C++ module example, which defines both a component and service API, see the [C++ complex module example](https://github.com/viamrobotics/viam-cpp-sdk/tree/main/src/viam/examples/modules/complex).
