@@ -33,7 +33,7 @@ To setup for building this module:
 
 ## Build and Run
 
-You can build this example module by either following [steps to build it directly from the registry](build-from-the-registry) or by opting for [local build instructions](#build-locally).
+You can build this example module by either the following steps to build it directly from the registry or by opting for the local build instructions.
 
 ### Build from the Registry
 
@@ -117,7 +117,8 @@ You can use this repository's files as a reference when building your C++ module
 
 ## Setting Up CI
 
-This module uses [Buildjet runners](https://buildjet.com/for-github-actions) to build natively for ARM. If you fork this repository and don't have Buildjet connected to GitHub, your CI jobs won't start.
+This module uses [Buildjet runners](https://buildjet.com/for-github-actions) to build natively for ARM.
+If you fork this repository and don't have Buildjet connected to GitHub, your CI jobs won't start.
 
 You can choose one option for CI setup:
 - Exlusively targetting x86
@@ -136,6 +137,7 @@ Refer to the [fork instructions](https://github.com/viam-labs/python-example-mod
 ### Library Paths
 
 Use `ldd` to identify library path issues.
+s
 For example:
 
 - If you are unable to find one of the `libviam` packages (for example: `libviamsdk.so.noabi`), ensure `libvimapi` and `libviamsdk` are bundled in your `module.tar.gz`.
